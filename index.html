@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #weather {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <div id="weather">
+        <label for="city">Enter City:</label>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weatherInfo"></div>
+    </div>
+
+    <script>
+        function getWeather() {
+            const city = document.getElementById('city').value;
+            const apiKey = 'e31de116e0f5e6998832b25179254255'; // Get your API key from OpenWeatherMap
+            const apiUrl = https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey};
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const weatherInfo = document.getElementById('weatherInfo');
+                    const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
+                    const description = data.weather[0].description;
+                    const cityName = data.name;
+                    const country = data.sys.country;
+
+                    weatherInfo.innerHTML = `
+                        <p>Location: ${cityName}, ${country}</p>
+                        <p>Temperature: ${temperature}°C</p>
+                        <p>Description: ${description}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    const weatherInfo = document.getElementById('weatherInfo');
+                    weatherInfo.innerHTML = '<p>Failed to fetch weather data. Please try again later.</p>';
+                });
+        }
+    </script>
+</body>
+</html>
